@@ -4,11 +4,11 @@ ConcurrentHashMap + ScheduledExecutorService로 실시간 인기 검색어 Top 1
 해당 앱은 처음 15초는 출력 없이 대기하고, 이후 15초마다 집계 결과를 갱신합니다.
 
 ## 주요 기능
-  1 검색어 입력 → 검색어 횟수 누적
+  1. 검색어 입력 → 검색어 횟수 누적
   
-  2 현재 상위 10개 검색어 조회 (가장 최근 집계 기준)
+  2. 현재 상위 10개 검색어 조회 (가장 최근 집계 기준)
   
-  3 프로그램 종료
+  3. 프로그램 종료
 
 시작 후 15초 뒤 첫 집계, 이후 15초마다 자동 갱신 메시지 출력
 
@@ -52,23 +52,23 @@ IDE(IntelliJ 등)에서는 프로젝트 SDK를 JDK 17+로 설정 후 TopTenMain.
 15초마다 “<<<상위 10개 검색어가 갱신되었습니다!!!>>>” 메시지가 출력됩니다.
 
 ## 내부 동작 요약
-  데이터 구조: ConcurrentHashMap<String, Integer> (검색어 → 횟수)
+  1. 데이터 구조: ConcurrentHashMap<String, Integer> (검색어 → 횟수)
   
-  스케줄러: scheduleAtFixedRate(task, 15, 15, SECONDS)
+  2. 스케줄러: scheduleAtFixedRate(task, 15, 15, SECONDS)
   
-  initialDelay=15s → 첫 집계
+  3. initialDelay=15s → 첫 집계
   
-  period=15s → 이후 주기적 집계
+  4. period=15s → 이후 주기적 집계
   
-  정렬: Map.Entry.comparingByValue(Comparator.reverseOrder())로 값 기준 내림차순
+  5. 정렬: Map.Entry.comparingByValue(Comparator.reverseOrder())로 값 기준 내림차순
   
-  입력 안정성: 메뉴 숫자 입력 예외(InputMismatchException) 처리 및 nextInt() 후 nextLine()로 개행 소비
+  6. 입력 안정성: 메뉴 숫자 입력 예외(InputMismatchException) 처리 및 nextInt() 후 nextLine()로 개행 소비
 
 ## 개선 아이디어
-  스냅샷을 불변 리스트로 교체(예: AtomicReference<List<Entry<...>>>)하여 동시 접근 더 안전하게
+  1. 스냅샷을 불변 리스트로 교체(예: AtomicReference<List<Entry<...>>>)하여 동시 접근 더 안전하게 개선
 
-  공백/과도하게 긴 검색어 필터링
+  2. 공백/과도하게 긴 검색어 필터링
   
-  파일/DB로 영속화 추가
+  3. 파일/DB로 영속화 추가
   
-  테스트 모드에서 주기 단축 가능하도록 설정 분리
+  4. 테스트 모드에서 주기 단축 가능하도록 설정 분리
